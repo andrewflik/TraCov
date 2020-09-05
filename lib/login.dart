@@ -75,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             context,
                             PageTransition(
                                 type: PageTransitionType.leftToRight,
-                                duration: Duration(milliseconds: 500),
-                                child: NearbyInterface()));
+                                duration: Duration(milliseconds: 300),
+                                child: NearbyInterface(email)));
                       }
                       setState(() {
                         showSpinner = false;

@@ -18,6 +18,8 @@ import 'package:tracov/home.dart';
 class NearbyInterface extends StatefulWidget {
   static const String id = 'nearby_interface';
 
+  final String email; //if you have multiple values add here
+  NearbyInterface(this.email, {Key key}) : super(key: key);
   @override
   _NearbyInterfaceState createState() => _NearbyInterfaceState();
 }
@@ -172,6 +174,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
       if (user != null) {
         loggedInUser = user;
         emaill = loggedInUser.email;
+        print("YOYO -  $widget.email");
       }
     } catch (e) {
       print(e);
@@ -207,7 +210,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 color: Colors.green,
               ),
               accountName: new Text(
-                "$emaill",
+                "${widget.email}",
                 style: new TextStyle(
                   fontSize: 14,
                   color: Colors.black,

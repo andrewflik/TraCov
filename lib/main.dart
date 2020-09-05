@@ -1,6 +1,7 @@
 import 'package:tracov/login.dart';
 import 'package:tracov/nearby_interface.dart';
 import 'package:tracov/registration.dart';
+import 'package:tracov/screen3.dart';
 import 'package:tracov/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
         LoginScreen.id: (context) => LoginScreen(),
-        NearbyInterface.id: (context) => NearbyInterface(),
+        NearbyInterface.id: (context) =>
+            NearbyInterface(ModalRoute.of(context).settings.arguments),
       },
     );
   }

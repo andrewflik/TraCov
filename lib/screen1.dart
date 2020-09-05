@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Screen1 extends StatefulWidget {
-  Screen1();
   static const String id = 'nearby_interface';
   @override
   _Screen1 createState() => _Screen1();
