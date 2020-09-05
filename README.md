@@ -2,4 +2,4 @@
 
 ## Submission by Team Turing - HACK GUJRAT
 
-## Theme- Health Car 
+## Theme- Health Care
