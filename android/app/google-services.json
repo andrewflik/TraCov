@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "554831250073",
+    "firebase_url": "https://tracov-47414.firebaseio.com",
+    "project_id": "tracov-47414",
+    "storage_bucket": "tracov-47414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554831250073:android:344423c6b64646b8d86e08",
+        "android_client_info": {
+          "package_name": "com.example.tracov"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554831250073-1iqi8enmsm84k55pjdaapmrticrdbeid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwegRMOjT-B5Q6NRW0l9huuc1SsBXvKrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554831250073-1iqi8enmsm84k55pjdaapmrticrdbeid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
