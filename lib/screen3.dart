@@ -33,7 +33,7 @@ class _Screen3 extends State<Screen3> {
   List<dynamic> contactLocations = [];
   //State class
   int page = 0;
-  int currentIndex = 0;
+  int currentIndex = 0, contacts = 0;
 
   void addContactsToList() async {
     await getCurrentUser();
@@ -83,6 +83,7 @@ class _Screen3 extends State<Screen3> {
             doc.reference.delete();
           }
         }
+        contacts++;
       }
     });
 
@@ -229,7 +230,7 @@ class _Screen3 extends State<Screen3> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          "0",
+                          "$contacts",
                           style: new TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 25),
                         ),
@@ -239,7 +240,7 @@ class _Screen3 extends State<Screen3> {
                       ),
                       Container(
                         child: Text(
-                          "0",
+                          "$contacts",
                           style: new TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 25),
                         ),
