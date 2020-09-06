@@ -18,8 +18,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyD6LCa4knry__Is8DCyoRB7nl-E8TnsSJk"/>
+
         <!-- Optional: only required for FILE payloads-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -28,6 +27,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="tracov"
         android:icon="@mipmap/ic_launcher">
+            <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD6LCa4knry__Is8DCyoRB7nl-E8TnsSJk"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

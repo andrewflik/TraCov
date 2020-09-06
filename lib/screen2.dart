@@ -32,12 +32,18 @@ class _Screen2 extends State<Screen2> {
     super.dispose();
   }
 
+  final _text = TextEditingController();
+  bool _validate = false;
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Column(
         children: <Widget>[
-          Text("LOGS"),
+          Text(
+            "LOGS",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
           new Expanded(child: new ListView.builder(
               itemBuilder: (BuildContext context, int index) {
             if (index < logs.length) {
@@ -55,10 +61,11 @@ class _Screen2 extends State<Screen2> {
               content: Column(
                 children: <Widget>[
                   TextField(
-                    controller: myController,
+                    controller: _text,
                     decoration: InputDecoration(
                       icon: Icon(Icons.account_circle),
                       labelText: 'Name',
+                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
                     ),
                   ),
                   TextField(
@@ -79,6 +86,9 @@ class _Screen2 extends State<Screen2> {
               buttons: [
                 DialogButton(
                   onPressed: () {
+                    setState(() {
+                      _text.text.isEmpty ? _validate = true : _validate = false;
+                    });
                     _addTodoItem();
                     Navigator.pop(context);
                   },

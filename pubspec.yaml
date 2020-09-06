@@ -39,8 +39,10 @@ dependencies:
   curved_navigation_bar: ^0.3.3
   rflutter_alert: ^1.0.3
   styled_widget: ^0.2.1+2
-  google_maps_flutter_heatmap: ^0.1.1+2
   flip_card: ^0.4.4
+  geolocator: ^6.0.0
+  flutter_map: any # or the latest version on Pub
+  google_maps_flutter_heatmap: ^0.1.1+2
   
 dev_dependencies:
   flutter_test:

@@ -35,6 +35,7 @@ class UserPage extends StatelessWidget {
       ).alignment(Alignment.center).padding(bottom: 20),
       UserCard(),
       ActionsRow(),
+      userStatus(),
       Settings(),
     ].toColumn().parent(page);
   }
@@ -178,6 +179,122 @@ class ActionsRow extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
+class userStatus extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        //child: Center(
+        child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 350,
+            padding: EdgeInsets.only(top: 12.0),
+            margin: EdgeInsets.only(top: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              color: Colors.white, //Colors.green[600],
+              elevation: 10,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Container(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              margin: EdgeInsets.only(top: 15),
+                              child: Text(
+                                " Threat",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.all(5),
+                            color: Colors.red,
+                            height: 60,
+                            width: 60),
+                        flex: 2,
+                      ),
+                      Flexible(
+                        child: Container(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: Text(
+                                "Potenial Threat",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.all(5),
+                            color: Colors.orange,
+                            height: 60,
+                            width: 60),
+                        flex: 3,
+                      ),
+                      Flexible(
+                        child: Container(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              margin: EdgeInsets.only(top: 15, left: 7),
+                              child: Text(
+                                "Safe",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.all(5),
+                            color: Colors.green,
+                            height: 60,
+                            width: 60),
+                        flex: 4,
+                      ),
+                    ],
+                  ),
+                  Container(
+                      child: Container(
+                          margin: EdgeInsets.all(18),
+                          child: Text(
+                            "Users are divided into 3 categories if someone came in contact with an infected person, the user would be marked as a POTENTIAL threat",
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ))),
+                  Container(
+                      child: Container(
+                          margin: EdgeInsets.all(18),
+                          child: Text(
+                            "The potential threat is notified with the details about his point of vicinity with the infected user.",
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ))),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+}
+
 class SettingsItemModel {
   final IconData icon;
   final Color color;
@@ -193,10 +310,10 @@ class SettingsItemModel {
 
 const List<SettingsItemModel> settingsItems = [
   SettingsItemModel(
-    icon: Icons.location_on,
+    icon: Icons.bluetooth,
     color: Color(0xff8D7AEE),
-    title: 'Address',
-    description: 'Ensure your harvesting address',
+    title: 'BLE',
+    description: 'BLE Beacon Broadcaster/Reciver',
   ),
   SettingsItemModel(
     icon: Icons.lock,
@@ -205,22 +322,16 @@ const List<SettingsItemModel> settingsItems = [
     description: 'System permission change',
   ),
   SettingsItemModel(
-    icon: Icons.menu,
+    icon: Icons.network_cell,
     color: Color(0xffFEC85C),
     title: 'General',
-    description: 'Basic functional settings',
+    description: 'Works with Celluar Connection',
   ),
   SettingsItemModel(
     icon: Icons.notifications,
     color: Color(0xff5FD0D3),
     title: 'Notifications',
-    description: 'Take over the news in time',
-  ),
-  SettingsItemModel(
-    icon: Icons.question_answer,
-    color: Color(0xffBFACAA),
-    title: 'Support',
-    description: 'We are here to help',
+    description: 'Get notified if you ever came in close contact',
   ),
 ];
 

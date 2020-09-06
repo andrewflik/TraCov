@@ -14,6 +14,7 @@ import 'package:tracov/welcome_screen.dart';
 import 'components/contact_card.dart';
 import 'constants.dart';
 import 'package:tracov/home.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class NearbyInterface extends StatefulWidget {
   static const String id = 'nearby_interface';
@@ -244,9 +245,9 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
               ],
             ),
             new ListTile(
-                leading: Icon(Icons.home),
+                leading: Icon(Icons.help),
                 title: new Text(
-                  "Home",
+                  "About",
                   style: new TextStyle(
                     fontSize: 15.5,
                     color: Colors.blue,
@@ -280,6 +281,28 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  Alert(
+                    context: context,
+                    type: AlertType.success,
+                    title: "Push Data via Mesh",
+                    desc:
+                        "Data will be synced back and forth, and logs will be submitted",
+                    buttons: [
+                      DialogButton(
+                        child: Text(
+                          "Submit",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          final snackBar = SnackBar(
+                              content: Text('Data is being pushed ...'));
+                          globalKey.currentState.showSnackBar(snackBar);
+                        },
+                        width: 120,
+                      )
+                    ],
+                  ).show();
                 }),
             new ListTile(
                 leading: Icon(Icons.report),
@@ -315,21 +338,11 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  final snackBar =
+                      SnackBar(content: Text('Limited to DEVELOPERS ONLY....'));
+                  globalKey.currentState.showSnackBar(snackBar);
                 }),
             new Divider(),
-            new ListTile(
-                leading: Icon(Icons.help),
-                title: new Text(
-                  "About",
-                  style: new TextStyle(
-                    fontSize: 15.5,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                }),
             new ListTile(
                 leading: Icon(Icons.power_settings_new),
                 title: new Text(

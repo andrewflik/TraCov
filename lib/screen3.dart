@@ -1,13 +1,18 @@
+//import 'package:apple_maps_flutter/apple_maps_flutter.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:location/location.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:styled_widget/styled_widget.dart';
 //import 'package:tracov/nearby_interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tracov/login.dart';
+import 'package:google_maps_flutter_heatmap/google_maps_flutter_heatmap.dart';
 
 class Screen3 extends StatefulWidget {
   static const String id = 'screen3';
@@ -143,6 +148,19 @@ class _Screen3 extends State<Screen3> {
   //Future navigateToSubPage(context) async {
   //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   //}
+
+  Completer<GoogleMapController> _controller = Completer();
+  final Set<Heatmap> _heatmaps = {};
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(13.040768, 80.235504),
+    zoom: 11.4746,
+  );
+  LatLng _heatmapLocation = LatLng(13.040768, 80.235504);
+  static final CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(13.040768, 80.235504),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
 
   @override
   void initState() {
@@ -290,13 +308,66 @@ class _Screen3 extends State<Screen3> {
               ),
             ),
           ),
+          SizedBox(
+            width: 350,
+            height: 350,
+            child: GoogleMap(
+              mapType: MapType.hybrid,
+              initialCameraPosition: _kGooglePlex,
+              heatmaps: _heatmaps,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
+
+            /*floatingActionButton: FloatingActionButton.extended(
+        onPressed: _addHeatmap,
+        label: Text('Add Heatmap'),
+        icon: Icon(Icons.add_box),
+      ),*/
+          ),
+          /*Align(
+            child: FloatingActionButton.extended(
+              onPressed: _addHeatmap,
+              label: Text('Add Heatmap'),
+              icon: Icon(Icons.add_box),
+            ),
+          ),*/
         ],
       ),
     ))
         //)
         );
   }
+
+  void _addHeatmap() {
+    setState(() {
+      _heatmaps.add(Heatmap(
+          heatmapId: HeatmapId(_heatmapLocation.toString()),
+          points: _createPoints(_heatmapLocation),
+          radius: 20,
+          visible: true,
+          gradient: HeatmapGradient(
+              colors: <Color>[Colors.green, Colors.red],
+              startPoints: <double>[0.2, 0.8])));
+    });
+  }
+
+  //heatmap generation helper functions
+  List<WeightedLatLng> _createPoints(LatLng location) {
+    final List<WeightedLatLng> points = <WeightedLatLng>[];
+    //Can create multiple points here
+    points.add(_createWeightedLatLng(location.latitude, location.longitude, 1));
+    points.add(
+        _createWeightedLatLng(location.latitude - 1, location.longitude, 1));
+    return points;
+  }
+
+  WeightedLatLng _createWeightedLatLng(double lat, double lng, int weight) {
+    return WeightedLatLng(point: LatLng(lat, lng), intensity: weight);
+  }
 }
+
 /*
 class UserPage extends StatelessWidget {
   @override
