@@ -141,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  flip_card:
+    dependency: "direct main"
+    description:
+      name: flip_card
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -156,6 +163,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_maps_flutter_heatmap:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter_heatmap
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+2"
   http:
     dependency: transitive
     description:

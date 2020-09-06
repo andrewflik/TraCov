@@ -57,6 +57,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
   int page = 0;
   GlobalKey _bottomNavigationKey = GlobalKey();
   int currentIndex = 0;
+  final globalKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> viewContainer = [
     Screen1(),
@@ -202,6 +203,7 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
     }*/
 
     return Scaffold(
+      key: globalKey,
       drawer: new Drawer(
         child: new ListView(
           children: <Widget>[
@@ -291,6 +293,15 @@ class _NearbyInterfaceState extends State<NearbyInterface> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+
+                  /*Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Show Snackbar'),
+                    duration: Duration(seconds: 3),
+                  ));*/
+                  final snackBar = SnackBar(
+                      content: Text(
+                          'Go to the middle bottom navigation tab, for reporting!'));
+                  globalKey.currentState.showSnackBar(snackBar);
                 }),
             new ListTile(
                 leading: Icon(Icons.settings),

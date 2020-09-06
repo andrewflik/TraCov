@@ -17,9 +17,139 @@ class Screen3 extends StatefulWidget {
 }
 
 class _Screen3 extends State<Screen3> {
+  Location location = Location();
+  Firestore _firestore = Firestore.instance;
+  final Strategy strategy = Strategy.P2P_STAR;
+  FirebaseUser loggedInUser;
+  String testText = '', emaill = '';
+  final _auth = FirebaseAuth.instance;
+  List<dynamic> contactTraces = [];
+  List<dynamic> contactTimes = [];
+  List<dynamic> contactLocations = [];
+  //State class
+  int page = 0;
+  int currentIndex = 0;
+
+  void addContactsToList() async {
+    await getCurrentUser();
+    _firestore
+        .collection('users')
+        .document(loggedInUser.email)
+        .collection('met_with')
+        .snapshots()
+        .listen((snapshot) {
+      for (var doc in snapshot.documents) {
+        String currUsername = doc.data['username'];
+        DateTime currTime = doc.data.containsKey('contact time')
+            ? (doc.data['contact time'] as Timestamp).toDate()
+            : null;
+        String currLocation = doc.data.containsKey('contact location')
+            ? doc.data['contact location']
+            : null;
+
+        if (!contactTraces.contains(currUsername)) {
+          contactTraces.add(currUsername);
+          contactTimes.add(currTime);
+          contactLocations.add(currLocation);
+        }
+      }
+      setState(() {});
+      print(loggedInUser.email);
+    });
+  }
+
+  void deleteOldContacts(int threshold) async {
+    await getCurrentUser();
+    DateTime timeNow = DateTime.now(); //get today's time
+
+    _firestore
+        .collection('users')
+        .document(loggedInUser.email)
+        .collection('met_with')
+        .snapshots()
+        .listen((snapshot) {
+      for (var doc in snapshot.documents) {
+//        print(doc.data.containsKey('contact time'));
+        if (doc.data.containsKey('contact time')) {
+          DateTime contactTime = (doc.data['contact time'] as Timestamp)
+              .toDate(); // get last contact time
+          // if time since contact is greater than threshold than remove the contact
+          if (timeNow.difference(contactTime).inDays > threshold) {
+            doc.reference.delete();
+          }
+        }
+      }
+    });
+
+    setState(() {});
+  }
+
+  void discovery() async {
+    try {
+      bool a = await Nearby().startDiscovery(loggedInUser.email, strategy,
+          onEndpointFound: (id, name, serviceId) async {
+        print('I saw id:$id with name:$name'); // the name here is an email
+
+        var docRef =
+            _firestore.collection('users').document(loggedInUser.email);
+
+        //  When I discover someone I will see their email and add that email to the database of my contacts
+        //  also get the current time & location and add it to the database
+        docRef.collection('met_with').document(name).setData({
+          'username': await getUsernameOfEmail(email: name),
+          'contact time': DateTime.now(),
+          'contact location': (await location.getLocation()).toString(),
+        });
+      }, onEndpointLost: (id) {
+        print(id);
+      });
+      print('DISCOVERING: ${a.toString()}');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getPermissions() {
+    Nearby().askLocationAndExternalStoragePermission();
+  }
+
+  Future<String> getUsernameOfEmail({String email}) async {
+    String res = '';
+    await _firestore.collection('users').document(email).get().then((doc) {
+      if (doc.exists) {
+        res = doc.data['username'];
+        print("Here ----- " + res);
+      } else {
+        // doc.data() will be undefined in this case
+        print("No such document!");
+      }
+    });
+    return res;
+  }
+
+  Future<void> getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        emaill = loggedInUser.email;
+        print("YOYO -  $widget.email");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //Future navigateToSubPage(context) async {
+  //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+  //}
+
   @override
   void initState() {
     super.initState();
+    deleteOldContacts(14); // Delete if 14 days old
+    addContactsToList();
+    getPermissions();
   }
 
   @override
@@ -27,43 +157,133 @@ class _Screen3 extends State<Screen3> {
     return Scaffold(
         //  resizeToAvoidBottomInset: true,
         body: Container(
-            child: Center(
-                child: SingleChildScrollView(
+            //child: Center(
+            child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 150,
+            height: 220,
+            padding: EdgeInsets.only(top: 12.0),
+            margin: EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              color: Colors.pink,
+              color: Color(0xff3977ff), //Colors.green[600],
               elevation: 10,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
-                    leading: Icon(Icons.supervised_user_circle, size: 70),
-                    title: Text('DEV', style: TextStyle(color: Colors.white)),
-                    subtitle:
-                        Text('TWICE', style: TextStyle(color: Colors.white)),
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage(
+                        "images/user.jpg",
+                      ), // no matter how big it is, it won't overflow
+                    ), //Icon(Icons.supervised_user_circle, size: 70),
+                    title:
+                        Text('$emaill', style: TextStyle(color: Colors.white)),
+                    subtitle: Text('             Overall Stats',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        )),
                   ),
-                  /* ButtonTheme.bar(
-                    child: ButtonBar(
-                      children: <Widget>[
-                        FlatButton(
-                          child: const Text('Edit',
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {},
+                  /*Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 25.0),
+                      margin: EdgeInsets.only(top: 1.0, left: 20.0),
+                      width: double.infinity,
+                      child: Text(
+                        "0",
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
+                    ),
+                  ),*/
+                  IntrinsicHeight(
+                      child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          "0",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
                         ),
-                        FlatButton(
-                          child: const Text('Delete',
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {},
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                      ),
+                      Container(
+                        child: Text(
+                          "0",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
                         ),
-                      ],
+                      ),
+                    ],
+                  )),
+                  IntrinsicHeight(
+                      child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          "",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                      ),
+                      Container(
+                        child: Text(
+                          "",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  )),
+                  IntrinsicHeight(
+                      child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          "   Daily\nContacts",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                      ),
+                      Container(
+                        child: Text(
+                          "   Total\nContacts",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  )),
+                  /*Container(
+                    padding: EdgeInsets.only(left: 25.0),
+                    margin: EdgeInsets.only(top: 28.0, left: 20.0),
+                    width: double.infinity,
+                    child: Text(
+                      "** Daily Contacts get reset daily",
+                      style: new TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13),
                     ),
                   ),*/
                 ],
@@ -72,7 +292,9 @@ class _Screen3 extends State<Screen3> {
           ),
         ],
       ),
-    ))));
+    ))
+        //)
+        );
   }
 }
 /*
